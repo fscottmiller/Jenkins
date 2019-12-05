@@ -1,0 +1,52 @@
+
+instances.each {
+    create ns <instance name-branch name>
+    create svc acc jenkins-admin -n <namespace>
+    create clusterrolebinding <namespace-jenkins-admin>
+
+    create configmap -n <namespace>
+        - project specific casc needs to be able to override generic casc
+    helm install/upgrade -n <namespace>
+        - project specific values file needs to be able to override generic values file
+}
+
+----------------
+master-master
+master-e2
+master-ct
+dev-master
+dev-e2
+dev-ct
+----------------
+
+1. cluster created and configured
+2. jenkins master of masters created 
+    - master of masters is in charge of only its own cluster/env (prod/nonprod)
+    - prod master and nonprod master should both get service hooks
+3. 
+
+** make instances dir now **
+
+instances (each has its own prod):
+master, ci, ct
+
+branches: 
+master, featureA, featureB
+
+master: master      // prod
+master: featureA    // dev env
+master: featureB    // dev env
+
+
+
+backup_bucket/instance/branch
+
+
+** need to specify helm chart versions **
+
+make init folder that 
+    - creates cluster
+    - installs helm/tiller
+    - installs master jenkins
+        - service account
+        - configmap...

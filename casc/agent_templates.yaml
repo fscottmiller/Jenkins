@@ -1,0 +1,29 @@
+# jenkins:
+#   clouds:
+#   - kubernetes:
+#       templates:
+#         - name: go
+#           label: go
+#           idleMinutes: 5
+#           containers: 
+#             - name: go
+#               image: golang
+#         - name: "jnlp"
+#           label: "jenkins-jenkins-slave"
+#           containers:
+#           - args: "^${computer.jnlpmac} ^${computer.name}"
+#             envVars:
+#               - containerEnvVar:
+#                   key: "JENKINS_URL"
+#                   value: "http://jenkins.jenkins.svc.cluster.local:8080"
+#             image: "jenkins/jnlp-slave:3.27-1"
+#             resourceLimitCpu: "512m"
+#             resourceLimitMemory: "512Mi"
+#             resourceRequestCpu: "512m"
+#             resourceRequestMemory: "512Mi"
+#             workingDir: "/home/jenkins/agent"
+#           name: "default"
+#           nodeUsageMode: NORMAL
+#           serviceAccount: "default"
+#           slaveConnectTimeoutStr: "0"
+#           yamlMergeStrategy: "override"

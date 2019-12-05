@@ -1,0 +1,34 @@
+master:
+  serviceType: LoadBalancer
+  containerEnv:
+    - name: CASC_JENKINS_CONFIG
+      value: /var/jenkins_home/casc_configs
+  installPlugins:
+  - kubernetes
+  - pipeline-model-definition
+  - pipeline-utility-steps
+  - pipeline-stage-view
+  - git
+  - configuration-as-code
+  - blueocean
+  - job-dsl
+  - matrix-auth
+  - kubernetes-pipeline-devops-steps
+  - multibranch-action-triggers
+  jCasc:
+    enabled: true
+# backup:
+#   enabled: true
+#   destination: gcs://jenkins-k8s-backup/test
+#   existingSecret: 
+#     gcpcreds: # this is the name of a kubernetes secret
+#       gcpcredentials: gcpcreds.json # this is the file containing the creds
+persistence:
+  volumes:
+  - name: jenkins-casc
+    configMap:
+      name: casc
+  mounts:
+  - mountPath: /var/jenkins_home/casc_configs
+    name: jenkins-casc
+    readOnly: true

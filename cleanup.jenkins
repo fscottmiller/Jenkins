@@ -1,0 +1,38 @@
+pipeline {
+    agent {
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  serviceAccountName: jenkins-admin
+  containers:
+  - name: kubectl
+    image: fscottmiller/kubectl
+    command:
+    - cat
+    tty: true
+"""
+        }
+    }
+    parameters {
+        string(name: "SOURCE_PROJECT_NAME", defaultValue: "")
+    }
+    
+    stages {
+        stage('Delete Namespace') {
+            steps {
+                container('kubectl') {
+                    sh script: "kubectl delete ns ${SOURCE_PROJECT_NAME.toLowerCase()}", label: "Deleting Namespace"
+                }
+            }
+        }
+        stage('Delete Role Binding') {
+            steps {
+                container('kubectl') {
+                    sh script: "kubectl delete clusterrolebinding ${SOURCE_PROJECT_NAME.toLowerCase()}-jenkins-admin", label: "Deleting Cluster Role Binding"
+                }
+            }
+        }
+    }
+}

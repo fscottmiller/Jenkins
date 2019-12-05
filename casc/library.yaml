@@ -1,0 +1,11 @@
+unclassified:
+  globalLibraries:
+    libraries:
+      - defaultVersion: dynamicFunctions
+        name: jenkins-ext
+        implicit: false
+        retriever:
+          modernSCM:
+            scm:
+              git:
+                remote: https://github.com/fscottmiller/jenkins-ext

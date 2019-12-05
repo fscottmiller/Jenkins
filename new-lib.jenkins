@@ -1,0 +1,65 @@
+@Library('jenkins-ext') _
+
+require 'helm'
+require 'kubectl'
+
+
+// Variables
+// namespace, serviceAccount, files, configmap, helmRepo, deployment
+def namespace = "tmp-test"
+def serviceAccount = "jenkins-admin"
+def files = 
+def configmap = 
+def helmRepo = 
+def deployment = 
+
+
+
+kubepipe(serviceAccount: 'jenkins-admin') {
+    stage('Create Namespace') {
+        def namespaces = kubectl "kubectl get ns --no-headers -o custom-columns=':metadata.name'"
+        if (namespaces.contains(namespace)) {
+                echo "namespace ${namespace} already exists"
+        } else {
+            kubectl "kubectl create ns ${namespace}"
+        }
+    }
+    stage('Create Service Account') {
+        def serviceAccounts = kubectl "kubectl get sa -n ${namespace} --no-headers -o custom-columns=':metadata.name'"
+        if (serviceAccounts.contains(serviceAccount)) {
+            echo "service account ${serviceAccount} already exists"
+        } else {
+            kubectl "kubectl create sa ${serviceAccount} -n ${namespace}"
+            kubectl "kubectl create clusterrolebinding ${namespace}-${serviceAccount} --clusterrole-cluster-admin --serviceaccount=${namespace}:${serviceAccount}"
+        }
+    }
+    stage('Create ConfigMap') {
+        def configmaps = kubectl "kubectl get configmaps -n ${namespace} --no-headers -o custom-columns=':metadata.name'"
+        writeYaml file: "tmp-config-yaml-file", data: mergeYaml(files)
+        if (configmaps.contains(configmap)) {
+            kubectl "kubectl create configmap ${configmap} -n ${namespace} --from-file tmp-config-yaml-file -o yaml --dry-run | kubectl replace -f -"
+        } else {
+            kubectl "kubectl create configmap ${configmap} -n ${namespace} --from-file tmp-config-yaml-file"
+        }
+    }
+    stage('Deploy') {
+        helm "helm add repo stable ${helmRepo} && helm repo update"
+
+        def command = " jenkins stable/jenkins -n ${namespace} "
+        valuesFiles.each {
+            command += "-f ${it} "
+        }
+        command += "--set "
+        extraParams.each {
+            command += "${it},"
+        }
+        command = command[0..-2]
+        def deployments = helm "helm list -n ${namespace}"
+        if (deployments.contains(deployment)) {
+            helm "helm upgrade ${command}"
+        } else {
+            helm "helm install ${command}"
+        }
+    }
+}
+

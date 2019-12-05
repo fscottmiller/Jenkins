@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+spec:
+  serviceAccountName: jenkins-admin
+  containers:
+  - name: kubectl
+    image: fscottmiller/kubectl
+    command:
+    - cat
+    tty: true
+  - name: helm
+    image: fscottmiller/helm
+    command:
+    - cat
+    tty: true
