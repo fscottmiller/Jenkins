@@ -1,13 +1,12 @@
 jobs:
   - script: >
-        multibranchPipelineJob('Deploy X') {
+        multibranchPipelineJob('Deploy') {
             branchSources {
                 branchSource {
                     source {
                         git {
                         id('jenkins-config')
-                        remote('https://dev.azure.com/markelcorp/DevOps%20and%20QE/_git/Jenkins')
-                        credentialsId('repo-creds')
+                        remote('https://github.com/fscottmiller/Jenkins')
                         }
                     }
                     strategy {
@@ -19,33 +18,33 @@ jobs:
                     }
                 }   
             }
-            properties {
-                pipelineTriggerProperty {
-                    deleteActionJobsToTrigger("Cleanup")
-                    branchIncludeFilter("*")
-                }
-            }
+            # properties {
+            #     pipelineTriggerProperty {
+            #         deleteActionJobsToTrigger("Cleanup")
+            #         branchIncludeFilter("*")
+            #     }
+            # }
             orphanedItemStrategy {
                 discardOldItems {
                     numToKeep(10)
                 }
             }
         }
-  - script: >
-      pipelineJob('Cleanup') {
-          definition {
-              cpsScm {
-                  scm {
-                      git {
-                          branch('continuousIntegration')
-                          remote {
-                              url('https://dev.azure.com/markelcorp/DevOps%20and%20QE/_git/Jenkins')
-                              credentials('repo-creds')
-                          }
-                      }
-                  }
-                  scriptPath('cleanup.jenkins')
-              }
-          }
-      }
+#   - script: >
+#       pipelineJob('Cleanup') {
+#           definition {
+#               cpsScm {
+#                   scm {
+#                       git {
+#                           branch('continuousIntegration')
+#                           remote {
+#                               url('https://dev.azure.com/markelcorp/DevOps%20and%20QE/_git/Jenkins')
+#                               credentials('repo-creds')
+#                           }
+#                       }
+#                   }
+#                   scriptPath('cleanup.jenkins')
+#               }
+#           }
+#       }
       
