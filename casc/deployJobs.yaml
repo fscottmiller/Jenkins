@@ -1,32 +1,16 @@
 jobs:
   - script: >
-        multibranchPipelineJob('Deploy') {
-            branchSources {
-                branchSource {
-                    source {
+        pipelineJob('Deploy') {
+            defintion {
+                cpsScm {
+                    scm {
                         git {
-                        id('jenkins-config')
-                        remote('https://github.com/fscottmiller/Jenkins')
-                        }
-                    }
-                    strategy {
-                        defaultBranchPropertyStrategy {
-                            props {
-                                noTriggerBranchProperty()
+                            branch('tmp')
+                            remote {
+                                url('https://github.com/fscottmiller/Jenkins')
                             }
                         }
                     }
-                }   
-            }
-            # properties {
-            #     pipelineTriggerProperty {
-            #         deleteActionJobsToTrigger("Cleanup")
-            #         branchIncludeFilter("*")
-            #     }
-            # }
-            orphanedItemStrategy {
-                discardOldItems {
-                    numToKeep(10)
                 }
             }
         }
