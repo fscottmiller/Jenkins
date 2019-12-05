@@ -1,0 +1,52 @@
+jobs:
+   - script: >
+      pipelineJob('seed') {
+        triggers {
+          hudsonStartupTrigger {
+            label('master')
+            quietPeriod('0')
+            nodeParameterName('master')
+            runOnChoice('True')
+          }
+        }
+        definition {
+          cpsScm {
+            scm {
+              git {
+                branch('master')
+                remote {
+                  credentials('fscottmiller')
+                  url('https://github.com/fscottmiller/dsl')
+                }
+              }
+            }
+          }
+        }
+      }
+   - script: >
+      pipelineJob('startup tests') {
+        triggers {
+          hudsonStartupTrigger {
+            label('master')
+            quietPeriod('0')
+            nodeParameterName('master')
+            runOnChoice('True')
+          }
+        }
+        definition {
+          cps {
+            sandbox()
+            script("""\
+              pipeline {
+                agent any
+                stages {
+                  stage ('test') {
+                    steps {
+                      echo "hello"
+                    }
+                  }
+                }
+              }""".stripIndent())
+          }
+        }
+      }

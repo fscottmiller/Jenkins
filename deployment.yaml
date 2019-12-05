@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: jenkins
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+        app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+        - name: jenkins
+          image: fscottmiller/casc
+          ports:
+            - name: https-port
+              containerPort: 8443
+            - name: jnlp-port
+              containerPort: 50000
+          volumeMounts:
+            - name: jenkins-home
+              mountPath: /var/jenkins_home
+      imagePullSecrets:
+        - name: my-secret
+      volumes:
+        - name: jenkins-home
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins
+spec:
+  type: NodePort 
+  ports:
+    - port: 8443
+      targetPort: 8443
+  selector:
+    app: jenkins

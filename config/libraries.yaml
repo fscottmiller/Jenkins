@@ -1,0 +1,12 @@
+unclassified:
+  globalLibraries:
+    libraries:
+    - defaultVersion: master
+      implicit: false
+      name: dsl
+      retriever:
+        modernSCM:
+          scm:
+            git:
+              remote: https://github.com/fscottmiller/dsl
+              credentialsId: fscottmiller
