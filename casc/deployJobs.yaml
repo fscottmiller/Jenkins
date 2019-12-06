@@ -14,37 +14,19 @@ jobs:
                 }
             }
         }
-  - script: >
-        pipelineJob('SonarQube') {
-            definition {
-                cpsScm {
-                    scm {
-                        git {
-                            branch('tmp')
-                            remote {
-                                url('https://github.com/fscottmiller/Jenkins')
-                            }
-                        }
-                    }
-                    scriptPath('sonar.jenkins')
-                }
-            }
-        }
 #   - script: >
-#       pipelineJob('Cleanup') {
-#           definition {
-#               cpsScm {
-#                   scm {
-#                       git {
-#                           branch('continuousIntegration')
-#                           remote {
-#                               url('https://dev.azure.com/markelcorp/DevOps%20and%20QE/_git/Jenkins')
-#                               credentials('repo-creds')
-#                           }
-#                       }
-#                   }
-#                   scriptPath('cleanup.jenkins')
-#               }
-#           }
-#       }
-      
+#         pipelineJob('SonarQube') {
+#             definition {
+#                 cpsScm {
+#                     scm {
+#                         git {
+#                             branch('tmp')
+#                             remote {
+#                                 url('https://github.com/fscottmiller/Jenkins')
+#                             }
+#                         }
+#                     }
+#                     scriptPath('sonar.jenkins')
+#                 }
+#             }
+#         }
