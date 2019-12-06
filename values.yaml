@@ -17,6 +17,9 @@ master:
   - multibranch-action-triggers
   jCasc:
     enabled: true
+  sidecars:
+    configAutoReload:
+      enabled: true
 # backup:
 #   enabled: true
 #   destination: gcs://jenkins-k8s-backup/test

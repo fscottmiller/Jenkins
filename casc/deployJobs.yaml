@@ -1,7 +1,7 @@
 jobs:
   - script: >
-        pipelineJob('Deploy') {
-            defintion {
+        pipelineJob('Deploy 3') {
+            definition {
                 cpsScm {
                     scm {
                         git {
