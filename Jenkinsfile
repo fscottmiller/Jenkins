@@ -5,7 +5,7 @@ require 'kubectl'
 initialize this
 
 kubepipe(serviceAccount: 'jenkins-admin') {
-    git 'https://github.com/fscottmiller/Jenkins'
+    git url: 'https://github.com/fscottmiller/Jenkins', branch: 'tmp'
     kubectl 'create configmap casc -n demo --from-file casc -o yaml --dry-run | kubectl replace -f -'
     helm 'repo add stable https://kubernetes-charts.storage.googleapis.com/'
     helm 'repo update'
