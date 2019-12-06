@@ -10,6 +10,6 @@ kubepipe(serviceAccount: 'jenkins-admin') {
         helm 'repo update'
         helm 'install sonarqube stable/sonarqube -n demo --set service.type=LoadBalancer'
         sleep 15
-        echo "${kubectl 'get svc sonarqube -n demo'}"
+        echo "${kubectl 'get svc sonarqube-sonarqube -n demo'}"
     }
 }
