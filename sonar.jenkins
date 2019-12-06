@@ -1,10 +1,14 @@
 @Library('jenkins-ext') _
 
 require 'helm'
+require 'kubectl'
 initialize this
 
 kubepipe(serviceAccount: 'jenkins-admin') {
-    helm 'repo add stable https://kubernetes-charts.storage.googleapis.com/'
-    helm 'repo update'
-    helm 'install sonarqube stable/sonarqube -n demo --set service.type=LoadBalancer'
+    stage('Deploy Application') {
+        helm 'repo add stable https://kubernetes-charts.storage.googleapis.com/'
+        helm 'repo update'
+        helm 'install sonarqube stable/sonarqube -n demo --set service.type=LoadBalancer'
+        echo "${kubectl 'get svc sonarqube -n demo'}"
+    }
 }
