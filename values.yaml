@@ -1,5 +1,6 @@
 master:
   serviceType: LoadBalancer
+  annotations: {"service.beta.kubernetes.io/azure-load-balancer-internal": "true"}
   containerEnv:
     - name: CASC_JENKINS_CONFIG
       value: /var/jenkins_home/casc_configs
